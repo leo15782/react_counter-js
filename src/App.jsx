@@ -19,15 +19,19 @@ export const App = () => {
 
   // Função complexa que primeiro adiciona 1, depois verifica se é divisível por 5
   const increase = () => {
-    // Primeiro adiciona 1 ao contador usando addOne
-    addOne();
+    // Usa atualização funcional para garantir atomicidade e evitar race conditions
+    setCount(prev => {
+      // Primeiro adiciona 1 (equivale a chamar addOne)
+      let newValue = prev + 1;
 
-    // Verifica se o valor ATUAL (antes de adicionar 1) é divisível por 5
-    // Se for, adiciona 100 adicionais
-    if (count % 5 === 0) {
-      // Se for divisível por 5, adiciona 100
-      add100();
-    }
+      // Depois verifica se o valor ORIGINAL era divisível por 5
+      // Se for, adiciona mais 100 (equivale a chamar add100)
+      if (prev % 5 === 0) {
+        newValue += 100;
+      }
+
+      return newValue;
+    });
   };
 
   return (
